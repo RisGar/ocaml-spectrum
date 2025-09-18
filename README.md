@@ -1,5 +1,7 @@
 ![spectrum](https://user-images.githubusercontent.com/147840/150885344-903be85d-5790-4bdb-82a2-542845046cc2.jpg)
+
 # spectrum
+
 An OCaml library for colour and formatting in the terminal.
 
 It's a little DSL which is exposed via the `Format` module's ["semantic tags"](https://ocaml.org/api/Format.html#tags) feature. String tags are defined for ANSI styles such as bold, underline etc and for named colours from the [xterm 256-color palette][1], as well as 24-bit colours via CSS-style hex codes and RGB or HSL values.
@@ -7,6 +9,8 @@ It's a little DSL which is exposed via the `Format` module's ["semantic tags"](h
 It's inspired by the examples given in ["Format Unraveled"](https://hal.archives-ouvertes.fr/hal-01503081/file/format-unraveled.pdf#page=11), a paper by Richard Bonichon & Pierre Weis, which also explains the cleverness behind OCaml's highly type-safe format string system.
 
 Many features are borrowed from those found in [chalk.js](https://github.com/chalk/chalk)
+
+This fork uses the more up-to-date pcre2 package and a more recent opam-state version.
 
 ### Goals
 
@@ -76,7 +80,7 @@ Which should look like:
 
 ![Screenshot 2022-01-15 at 19 08 09](https://user-images.githubusercontent.com/147840/149634761-6c2d1799-4f19-42c3-a3f4-fbeec2b04546.png)
 
-Above, the tag `bold` is used to output one the [ANSI style codes](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters).
+Above, the tag `bold` is used to output one the [ANSI style codes](<https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters>).
 
 Spectrum defines tags for these styles:
 
@@ -97,12 +101,13 @@ Spectrum.Simple.printf "@{<#f0c090>%s@}\n" "Hello world 👋";;
 Spectrum.Simple.printf "@{<#f00>%s@}\n" "RED ALERT";;
 ```
 
-...or CSS-style [rgb(...)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb()) or [hsl(...)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/hsl()) formats:
+...or CSS-style [rgb(...)](<https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb()>) or [hsl(...)](<https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/hsl()>) formats:
 
 ```ocaml
 Spectrum.Simple.printf "@{<rgb(240 192 144)>%s@}\n" "Hello world 👋";;
 Spectrum.Simple.printf "@{<hsl(60 100 50)>%s@}\n" "YELLOW ALERT";;
 ```
+
 ![Screenshot 2022-01-15 at 19 16 50](https://user-images.githubusercontent.com/147840/149634994-609a9f07-74b3-40f6-81c3-9f70914f9400.png)
 
 As in CSS, comma separators between the RGB or HSL components are optional.
@@ -118,6 +123,7 @@ Any colour tag can be prefixed with a foreground `fg:` or background `bg:` quali
 ```ocaml
 Spectrum.Simple.printf "@{<bg:#f00>%s@}\n" "RED ALERT";;
 ```
+
 ![Screenshot 2022-01-15 at 19 24 22](https://user-images.githubusercontent.com/147840/149635190-70af1871-50c8-4e78-9369-a8ce71888106.png)
 
 #### Compound tags
@@ -127,6 +133,7 @@ Finally, Spectrum also supports compound tags in comma-separated format, e.g.:
 ```ocaml
 Spectrum.Simple.printf "@{<bg:#f00,bold,yellow>%s@}\n" "RED ALERT";;
 ```
+
 ![Screenshot 2022-01-15 at 19 25 27](https://user-images.githubusercontent.com/147840/149635217-a3b86a4b-e732-4c7e-887d-e907b249214d.png)
 
 ### Interface
@@ -210,6 +217,7 @@ type color_level =
 ## Changelog
 
 #### 0.6.0
+
 - finally understood what the interface should be 😅
 - expose main interface via the parent `Spectrum` module (instead of `Spectrum.Printer` as it used to be)
 - main interface is now `Spectrum.prepare_ppf`, allowing Spectrum tag handling with the usual `Format.printf` methods, with the usual buffering behaviour in user's control
@@ -218,27 +226,30 @@ type color_level =
 - make `%` char optional in HSL colours, to avoid ugly escaping
 
 #### 0.5.0
+
 - support CSS-style `rgb(...)` and `hsl(...)` color tags
 
 #### 0.4.0
+
 - port the terminal colour capabilities detection from [chalk.js](https://github.com/chalk/chalk)
 
 #### 0.3.0
+
 - expose separate `Exn` and `Noexn` interfaces
 - fix for buffer interaction issue (tests broke when updating dep `Fmt.0.9.0`) ...probably affected most uses of `sprintf_into`
 - replace `sprintf_into` kludge with a working `sprintf` implementation
 
 #### 0.2.0
+
 - first viable version
 
 ## TODOs
 
 - auto coercion to nearest supported colour, for high res colours on unsupported terminals, as per `chalk`
   - don't output any codes if level is `Unsupported`
-  - output basic codes when level is `Basic` 
+  - output basic codes when level is `Basic`
 - tests for all methods (`sprintf` and the lexer are tested currently), property-based tests
 - publish the printer and capabilities-detection as separate opam modules?
 - expose variant types for use with explicit `mark_open_stag` and close calls?
-
 
 [1]: https://www.ditig.com/256-colors-cheat-sheet
