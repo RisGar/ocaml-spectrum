@@ -28,7 +28,7 @@
   (pcre2
    (>= 8.0))
   (opam-state
-   (>= 2.1))
+   (>= 2.4))
   (ppx_deriving
    (>= 5.2))
   ; test deps
